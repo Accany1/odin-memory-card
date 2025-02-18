@@ -1,31 +1,20 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
+import shuffleArray from './components/shuffleArray.jsx'
+import PokemonCard from './components/PokemonCard.jsx'
+import randomID from './components/randomID.jsx'
 
 const MAX_POKEMON = 1025
 const POKEMON_URL = "https://pokeapi.co/api/v2/pokemon/"
 
-function PokemonCard({name, image,onClick}) {
-  return (
-    <div onClick={onClick} className="card">
-      <img src={image} alt={name} width={250} height={250} />
-      <div className="name">{name}</div>
-    </div>
-  )
-}
-
 function App() {
   const [count, setCount] = useState(0)
   const [pokemon, setPokemon] = useState([])
-  const [restart, setRestart] = useState(false)
   const [selected, setSelected] = useState([])
   const [bestScore, setBestScore] = useState(0)
-
-  function randomID() {
-    return Math.floor(Math.random() * MAX_POKEMON)
-  }
-
+ 
   async function fetchPokemon() {
-    let response = await fetch(POKEMON_URL + randomID())
+    let response = await fetch(POKEMON_URL + randomID(MAX_POKEMON))
     let data = await response.json()
     setPokemon((oldvalue) => [...oldvalue, data])
   }
@@ -44,18 +33,9 @@ function App() {
     }},[]
   )
 
-  const shuffleArray = (array) => {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array
-  }
-
   const handleClick = (name) => {
     if (selected.includes(name)) {
       setSelected([])
-      setRestart(true)
       if (count > bestScore) {
         setBestScore(count)
       }
