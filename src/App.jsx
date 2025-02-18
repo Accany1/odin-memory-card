@@ -23,17 +23,26 @@ function App() {
     return Math.floor(Math.random() * MAX_POKEMON)
   }
 
-  function getPokemon(id) {
-    fetch(POKEMON_URL + id)
-      .then(res => res.json())
-      .then(data => {
-        setPokemon(pokemon.concat(data))
-      })
+  async function fetchPokemon() {
+    let response = await fetch(POKEMON_URL + randomID())
+    let data = await response.json()
+    setPokemon((oldvalue) => [...oldvalue, data])
   }
 
-  function getRandomPokemon() {
-    getPokemon(randomID())
-  }
+  useEffect(() => {
+    let mounted = true
+
+    if (mounted) {
+      for (let i = 0; i < 4; i++) {
+        fetchPokemon()
+      }
+    }
+    
+    return () => {
+      mounted = false
+    }},[])
+
+
   
 
   return (
@@ -45,7 +54,6 @@ function App() {
           <div>Best Score: 0</div>
         </div>
         <div className="card-holder">
-          <button onClick={getRandomPokemon}>Get Random Pokemon</button>
           {pokemon.map((p) => {return <PokemonCard key={p.id} name={p.name} image={p.sprites.front_default} />})}
         </div>
       </div>
