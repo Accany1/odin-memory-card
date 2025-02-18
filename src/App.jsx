@@ -23,7 +23,7 @@ function App() {
     let mounted = true
 
     if (mounted) {
-      for (let i = 0; i < 6; i++) {
+      for (let i = 0; i < 12; i++) {
         fetchPokemon()
       }
     }
